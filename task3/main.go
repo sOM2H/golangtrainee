@@ -19,6 +19,7 @@ const (
 	dsn         = "root:root@tcp(127.0.0.1:3306)/golangbeginner?charset=utf8mb4&parseTime=True&loc=Local"
 )
 
+// create table posts(id INT NOT NULL, user_id INT NOT NULL, title VARCHAR(100) NOT NULL, body VARCHAR(8000) NOT NULL);
 type Post struct {
 	Id     int    `json:"id"`
 	UserId int    `json:"userId"`
@@ -26,6 +27,7 @@ type Post struct {
 	Body   string `json:"body"`
 }
 
+// create table comments(id INT NOT NULL, post_id INT NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, body VARCHAR(8000) NOT NULL);
 type Comment struct {
 	Id     int    `json:"id"`
 	PostId int    `json:"postId"`
