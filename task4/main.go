@@ -132,13 +132,13 @@ func createComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func getComments(w http.ResponseWriter, r *http.Request) {
-	var posts []Comment
-	db.Find(&posts)
-	json.NewEncoder(w).Encode(posts)
+	var comments []Comment
+	db.Find(&comments)
+	json.NewEncoder(w).Encode(comments)
 }
 
 func updateComment(w http.ResponseWriter, r *http.Request) {
-	postID := mux.Vars(r)["id"]
+	commentID := mux.Vars(r)["id"]
 
 	var comment Comment
 
@@ -149,7 +149,7 @@ func updateComment(w http.ResponseWriter, r *http.Request) {
 	}
 	json.Unmarshal(reqBody, &comment)
 
-	comment.Id, _ = strconv.Atoi(postID)
+	comment.Id, _ = strconv.Atoi(commentID)
 
 	result := db.Save(&comment)
 	if result.Error != nil {
@@ -161,9 +161,9 @@ func updateComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func getComment(w http.ResponseWriter, r *http.Request) {
-	postID := mux.Vars(r)["id"]
+	commentID := mux.Vars(r)["id"]
 	var comment Comment
-	err := db.First(&comment, postID)
+	err := db.First(&comment, commentID)
 	if err.Error != nil {
 		errorHandler(w, r, http.StatusNotFound)
 		return
@@ -172,8 +172,8 @@ func getComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteComment(w http.ResponseWriter, r *http.Request) {
-	postID := mux.Vars(r)["id"]
-	err := db.Delete(&Comment{}, postID)
+	commentID := mux.Vars(r)["id"]
+	err := db.Delete(&Comment{}, commentID)
 	if err.Error != nil {
 		errorHandler(w, r, http.StatusNotFound)
 		return
