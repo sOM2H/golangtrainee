@@ -43,6 +43,7 @@ func respond(c echo.Context, code int, i interface{}) error {
 	return c.JSON(code, i)
 }
 
+// @Router /posts [get]
 func getPosts(c echo.Context) error {
 	var posts []Post
 	db.Find(&posts)
@@ -50,6 +51,7 @@ func getPosts(c echo.Context) error {
 	return respond(c, http.StatusOK, posts)
 }
 
+// @Router /posts/{id} [get]
 func getPost(c echo.Context) error {
 	postID := c.Param("id")
 	var post Post
@@ -61,6 +63,7 @@ func getPost(c echo.Context) error {
 	return respond(c, http.StatusOK, post)
 }
 
+// @Router /posts [post]
 func createPost(c echo.Context) error {
 	id, _ := strconv.Atoi(c.FormValue("id"))
 	user_id, _ := strconv.Atoi(c.FormValue("userId"))
@@ -77,6 +80,7 @@ func createPost(c echo.Context) error {
 	return respond(c, http.StatusOK, post)
 }
 
+// @Router /posts/{id} [put]
 func updatePost(c echo.Context) error {
 	id, _ := strconv.Atoi(c.FormValue("id"))
 	user_id, _ := strconv.Atoi(c.FormValue("userId"))
@@ -94,6 +98,7 @@ func updatePost(c echo.Context) error {
 
 }
 
+// @Router /posts/{id} [delete]
 func deletePost(c echo.Context) error {
 	postID := c.Param("id")
 	err := db.Delete(&Post{}, postID)
@@ -103,6 +108,7 @@ func deletePost(c echo.Context) error {
 	return respond(c, http.StatusOK, "Deleted")
 }
 
+// @Router /comments [get]
 func getComments(c echo.Context) error {
 	var comments []Comment
 	db.Find(&comments)
@@ -110,6 +116,7 @@ func getComments(c echo.Context) error {
 	return respond(c, http.StatusOK, comments)
 }
 
+// @Router /comments/{id} [get]
 func getComment(c echo.Context) error {
 	commentID := c.Param("id")
 	var comment Comment
@@ -121,6 +128,7 @@ func getComment(c echo.Context) error {
 	return respond(c, http.StatusOK, comment)
 }
 
+// @Router /comments [post]
 func createComment(c echo.Context) error {
 	id, _ := strconv.Atoi(c.FormValue("id"))
 	post_id, _ := strconv.Atoi(c.FormValue("postId"))
@@ -138,6 +146,7 @@ func createComment(c echo.Context) error {
 	return respond(c, http.StatusOK, comment)
 }
 
+// @Router /comments/{id} [put]
 func updateComment(c echo.Context) error {
 	id, _ := strconv.Atoi(c.FormValue("id"))
 	post_id, _ := strconv.Atoi(c.FormValue("postId"))
@@ -155,6 +164,7 @@ func updateComment(c echo.Context) error {
 	return respond(c, http.StatusOK, comment)
 }
 
+// @Router /comments/{id} [delete]
 func deleteComment(c echo.Context) error {
 	commentID := c.Param("id")
 	err := db.Delete(&Comment{}, commentID)

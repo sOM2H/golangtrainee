@@ -23,7 +23,26 @@ var doc = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/comments": {
+            "get": {},
+            "post": {}
+        },
+        "/comments/{id}": {
+            "get": {},
+            "put": {},
+            "delete": {}
+        },
+        "/posts": {
+            "get": {},
+            "post": {}
+        },
+        "/posts/{id}": {
+            "get": {},
+            "put": {},
+            "delete": {}
+        }
+    }
 }`
 
 type swaggerInfo struct {

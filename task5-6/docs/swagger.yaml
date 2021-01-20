@@ -1,4 +1,18 @@
 info:
   contact: {}
-paths: {}
+paths:
+  /comments:
+    get: {}
+    post: {}
+  /comments/{id}:
+    delete: {}
+    get: {}
+    put: {}
+  /posts:
+    get: {}
+    post: {}
+  /posts/{id}:
+    delete: {}
+    get: {}
+    put: {}
 swagger: "2.0"
