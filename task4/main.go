@@ -2,11 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
@@ -36,10 +38,17 @@ type Comment struct {
 	Body   string `json:"body"`
 }
 
+func respond(w http.ResponseWriter, r *http.Request, i interface{}) error {
+	if strings.HasPrefix(r.Header.Get("Content-Type"), "application/xml") {
+		return xml.NewEncoder(w).Encode(i)
+	}
+	return json.NewEncoder(w).Encode(i)
+}
+
 func errorHandler(w http.ResponseWriter, r *http.Request, status int) {
 	w.WriteHeader(status)
 	if status == http.StatusNotFound {
-		fmt.Fprint(w, "not found")
+		respond(w, r, "")
 	}
 }
 
@@ -48,8 +57,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Fprintf(w, "Error")
-
+		respond(w, r, "Error")
 	}
 	json.Unmarshal(reqBody, &post)
 
@@ -58,14 +66,14 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(post)
+	respond(w, r, post)
 
 }
 
 func getPosts(w http.ResponseWriter, r *http.Request) {
 	var posts []Post
 	db.Find(&posts)
-	json.NewEncoder(w).Encode(posts)
+	respond(w, r, posts)
 }
 
 func updatePost(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +95,7 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(post)
+	respond(w, r, post)
 
 }
 
@@ -99,7 +107,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(post)
+	respond(w, r, post)
 }
 
 func deletePost(w http.ResponseWriter, r *http.Request) {
@@ -109,7 +117,7 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	fmt.Fprint(w, "Deleted")
+	respond(w, r, "Deleted")
 }
 
 func createComment(w http.ResponseWriter, r *http.Request) {
@@ -127,14 +135,14 @@ func createComment(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(comment)
+	respond(w, r, comment)
 
 }
 
 func getComments(w http.ResponseWriter, r *http.Request) {
 	var comments []Comment
 	db.Find(&comments)
-	json.NewEncoder(w).Encode(comments)
+	respond(w, r, comments)
 }
 
 func updateComment(w http.ResponseWriter, r *http.Request) {
@@ -156,7 +164,7 @@ func updateComment(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(comment)
+	respond(w, r, comment)
 
 }
 
@@ -168,7 +176,7 @@ func getComment(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(comment)
+	respond(w, r, comment)
 }
 
 func deleteComment(w http.ResponseWriter, r *http.Request) {
@@ -178,7 +186,7 @@ func deleteComment(w http.ResponseWriter, r *http.Request) {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
-	fmt.Fprint(w, "Deleted")
+	respond(w, r, "Deleted")
 }
 
 func main() {
